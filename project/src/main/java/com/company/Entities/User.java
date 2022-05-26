@@ -1,30 +1,43 @@
 package com.company.Entities;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class User extends Tracker{
+public class User{
+    private static final AtomicInteger count = new AtomicInteger(0);
+    private Integer id;
     private String firstName;
     private String lastName;
     private String userName;
     private String password;
     private String role;
-    private Address address;
-    private Set<Order> orders;
-
-    public Address getAddress() {
-        return address;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public User(Integer id, String firstName, String lastName, String userName, String password, String role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
+
     }
 
-    public Set<Order> getOrders() {
-        return orders;
+    public User(User user){
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.userName = user.getUserName();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+        id = count.incrementAndGet();
+        System.out.println("incremented id");
     }
 
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
+    public User() {
+
+
     }
 
     public String getRole() {
