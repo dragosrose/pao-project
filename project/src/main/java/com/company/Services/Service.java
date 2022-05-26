@@ -54,7 +54,7 @@ public class Service implements IService {
 ////
 //        categoryService.getCategories();
 //        System.out.println("Nume categorie 1: " + categoryService.getCategoryById(1).getName());
-//        categoryService.updateCategory("Pula", 2);
+//        categoryService.updateCategory("wowowow", 2);
 //        System.out.println("Nume categorie 2: " + categoryService.getCategoryById(2).getName());
 //        categoryService.deleteCategoryById(2);
 //        categoryService.getCategories();
