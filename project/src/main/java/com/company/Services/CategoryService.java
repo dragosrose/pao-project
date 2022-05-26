@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.Category;
 import com.company.Repositories.Repository;
@@ -7,7 +8,7 @@ import com.company.Repositories.Repository;
 import java.sql.*;
 import java.util.Set;
 
-public class CategoryService implements ICategoryService {
+public class CategoryService extends Audit implements ICategoryService {
     private static CategoryService instance;
 
     private CategoryService() {
@@ -23,6 +24,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void addCategory(Category category) {
         String insert = "INSERT INTO category(name) VALUES(?)";
+        audit(insert);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -40,6 +42,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Set<Category> getCategories() {
         String select = "SELECT * FROM category";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
@@ -59,6 +62,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(int id) {
         String select = "SELECT * FROM category WHERE id=?";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -76,6 +80,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void updateCategory(String name, int id) {
         String update = "UPDATE category SET name=? WHERE id=?";
+        audit(update);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
@@ -91,6 +96,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void deleteCategoryById(int id) {
         String delete = "DELETE FROM category WHERE id=?";
+        audit(delete);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(delete)) {

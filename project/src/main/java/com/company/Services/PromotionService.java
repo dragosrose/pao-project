@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.Promotions;
 
@@ -8,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PromotionService {
+public class PromotionService extends Audit {
     private static PromotionService instance;
 
     private PromotionService() {};
@@ -21,6 +22,7 @@ public class PromotionService {
 
     public void addPromotion(Promotions promotions) {
         String insert = "INSERT INTO promotion(code, discount, user_id) values (?,?,?);";
+        audit(insert);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -35,6 +37,7 @@ public class PromotionService {
 
     public Promotions getPromotionByCode(String code, int user_id) {
         String select = "SELECT * FROM promotion WHERE user_id=? AND code=? AND discount > 0";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 

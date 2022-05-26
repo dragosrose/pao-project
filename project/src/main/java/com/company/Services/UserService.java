@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.User;
 import com.company.Repositories.Repository;
@@ -8,7 +9,7 @@ import java.sql.*;
 import java.util.Objects;
 import java.util.Set;
 
-public class UserService implements IUserService{
+public class UserService extends Audit implements IUserService{
 
     private static UserService instance;
     private UserService() {};
@@ -23,6 +24,7 @@ public class UserService implements IUserService{
     public void addUser(User user) {
 
         String insert = "INSERT INTO user(firstName, lastName, userName, password, role) VALUES(?, ?, ?, ?, ?)";
+        audit(insert);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -42,6 +44,7 @@ public class UserService implements IUserService{
     @Override
     public Set<User> getUsers() {
         String select = "SELECT * FROM user";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
@@ -65,6 +68,7 @@ public class UserService implements IUserService{
     @Override
     public User getUserById(int id) {
         String select = "SELECT * FROM user WHERE id=?";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -84,6 +88,7 @@ public class UserService implements IUserService{
     public void deleteUserById(int id) {
 
         String delete = "DELETE FROM user WHERE id=?";
+        audit(delete);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(delete)) {
@@ -100,6 +105,7 @@ public class UserService implements IUserService{
 
 
         String update = "UPDATE user SET firstName=?, lastName=?, userName=?, password=?, role=? WHERE id=?";
+        audit(update);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
@@ -120,6 +126,7 @@ public class UserService implements IUserService{
     @Override
     public User login(String userName, String password) {
         String search = "SELECT * FROM user WHERE userName=? and password=?";
+        audit(search);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try(PreparedStatement preparedStatement = connection.prepareStatement(search)){

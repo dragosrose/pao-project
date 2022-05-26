@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.Category;
 import com.company.Entities.Product;
@@ -11,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductService {
+public class ProductService extends Audit {
     private static ProductService instance;
 
     private ProductService() {};
@@ -24,6 +25,7 @@ public class ProductService {
 
     public void addProduct(Product product){
         String insert = "INSERT INTO product(name, description, price, stock, category_id, distributor_id) values (?,?,?,?,?,?);";
+        audit(insert);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -44,6 +46,7 @@ public class ProductService {
         ArrayList<Product> products = new ArrayList<Product>();
 
         String select = "SELECT * FROM product WHERE category_id=?;";
+        audit(select);
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(select)) {
@@ -74,6 +77,7 @@ public class ProductService {
 
     public Product getProductById(int id) {
         String select = "SELECT * FROM product WHERE id=?";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -91,6 +95,8 @@ public class ProductService {
 
     public void getProductsByDistributorsId(int distributor_id){
         String select = "SELECT * FROM product WHERE distributor_id=?;";
+        audit(select);
+
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
         try (Statement stmt = connection.createStatement()) {

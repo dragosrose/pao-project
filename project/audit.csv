@@ -1,0 +1,2 @@
+"INSERT INTO user(firstName, lastName, userName, password, role) VALUES(?, ?, ?, ?, ?)"
+"SELECT * FROM user WHERE userName=? and password=?"

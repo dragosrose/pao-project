@@ -32,7 +32,7 @@ public class User{
         this.password = user.getPassword();
         this.role = user.getRole();
         id = count.incrementAndGet();
-        System.out.println("incremented id");
+
     }
 
     public User() {

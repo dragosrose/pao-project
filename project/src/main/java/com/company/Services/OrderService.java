@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.Category;
 import com.company.Entities.Order;
@@ -10,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class OrderService implements IOrderService{
+public class OrderService extends Audit implements IOrderService{
     private static OrderService instance;
     private OrderService() {};
 
@@ -23,6 +24,7 @@ public class OrderService implements IOrderService{
     @Override
     public void addOrder(Order order) {
         String insert = "INSERT INTO userorder(order_date, user_id, product_id) VALUES (?, ?, ?)";
+        audit(insert);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -39,6 +41,7 @@ public class OrderService implements IOrderService{
     @Override
     public Set<Order> getOrders() {
         String select = "SELECT * FROM userorder";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
@@ -60,6 +63,7 @@ public class OrderService implements IOrderService{
     @Override
     public Order getOrderById(int id) {
         String select = "SELECT * FROM userorder WHERE id=?";
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
@@ -77,12 +81,12 @@ public class OrderService implements IOrderService{
 
     public ArrayList<Order> getOrdersByUserID(int user_id) {
         ArrayList<Order> orders = new ArrayList<Order>();
-
         String select = "SELECT userorder.id, product.name, category.name FROM userorder" +
                 "INNER JOIN product ON userorder.product_id = product.id" +
                 "INNER JOIN category ON userorder.category_id = category.id" +
                 "WHERE useroder.user_id=?";
 
+        audit(select);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         ResultSet resultSet = null;
@@ -109,6 +113,7 @@ public class OrderService implements IOrderService{
     @Override
     public void deleteOrderById(int id) {
         String delete = "DELETE FROM userorder WHERE id=?";
+        audit(delete);
 
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(delete)) {

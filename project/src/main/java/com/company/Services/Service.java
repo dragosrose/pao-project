@@ -3,6 +3,7 @@ package com.company.Services;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.*;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,30 +36,33 @@ public class Service implements IService {
     @Override
     public void mainPanel() throws SQLException {
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+            userService.writer.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
+
         createTables();
 
-//        categoryService.addCategory(new Category("Phones"));
-//        categoryService.addCategory(new Category("Laptops"));
-//        categoryService.addCategory(new Category("TV"));
-//        categoryService.addCategory(new Category("Tablets"));
-//
-//        distributorService.addDistributor(new Distributor("Zing"));
-//        distributorService.addDistributor(new Distributor("Fastly"));
-//        distributorService.addDistributor(new Distributor("Lessgoo"));
-//
-//        productService.addProduct(new Product("Iphone 13", "descriere iphone 13", 5, 3000, 1, 1));
-//        productService.addProduct(new Product("Samsung S20", "descriere samsung s20", 8, 2000, 1, 2));
-//        productService.addProduct(new Product("ASUS TUF A15", "descriere laptop", 10, 5000, 2, 2));
-//        productService.addProduct(new Product("Samsung LED X50", "descriere TV", 7, 12000,3, 2));
-//        productService.addProduct(new Product("NEO TABLET 20", "descriere tableta", 9, 2300, 4,3));
-////
-//        categoryService.getCategories();
-//        System.out.println("Nume categorie 1: " + categoryService.getCategoryById(1).getName());
-//        categoryService.updateCategory("wowowow", 2);
-//        System.out.println("Nume categorie 2: " + categoryService.getCategoryById(2).getName());
-//        categoryService.deleteCategoryById(2);
-//        categoryService.getCategories();
+//        A se comenta pana la linia 65 pentru a evita duplicates.
 
+        categoryService.addCategory(new Category("Phones"));
+        categoryService.addCategory(new Category("Laptops"));
+        categoryService.addCategory(new Category("TV"));
+        categoryService.addCategory(new Category("Tablets"));
+
+        distributorService.addDistributor(new Distributor("Zing"));
+        distributorService.addDistributor(new Distributor("Fastly"));
+        distributorService.addDistributor(new Distributor("Lessgoo"));
+
+        productService.addProduct(new Product("Iphone 13", "descriere iphone 13", 5, 3000, 1, 1));
+        productService.addProduct(new Product("Samsung S20", "descriere samsung s20", 8, 2000, 1, 2));
+        productService.addProduct(new Product("ASUS TUF A15", "descriere laptop", 10, 5000, 2, 2));
+        productService.addProduct(new Product("Samsung LED X50", "descriere TV", 7, 12000,3, 2));
+        productService.addProduct(new Product("NEO TABLET 20", "descriere tableta", 9, 2300, 4,3));
+//
 
         User user = null;
         boolean login = false;
@@ -271,7 +275,8 @@ public class Service implements IService {
             System.out.println("1. Username ");
             System.out.println("2. First name ");
             System.out.println("3. Last name ");
-            System.out.println("4. Exit ");
+            System.out.println("4. Delete your account.");
+            System.out.println("5. Exit ");
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -290,6 +295,11 @@ public class Service implements IService {
                     user.setLastName(scanner.nextLine());
                     break;
                 case 4:
+                    System.out.println("You have deleted your account.");
+                    addressService.deleteAddressById(user.getId());
+                    userService.deleteUserById(user.getId());
+                    break edit;
+                case 5:
                     userService.editUser(user);
                     break edit;
             }

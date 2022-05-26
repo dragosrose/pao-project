@@ -1,5 +1,6 @@
 package com.company.Services;
 
+import com.company.Audit;
 import com.company.Config.DatabaseConfiguration;
 import com.company.Entities.Address;
 import com.company.Repositories.Repository;
@@ -9,9 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AddressService {
+public class AddressService extends Audit {
 
     private static AddressService instance;
+
     private AddressService() {};
 
     public static AddressService getInstance() {
@@ -22,7 +24,7 @@ public class AddressService {
 
     public void addAddress(Address address){
         String insert = "INSERT INTO address(country, city, street, user_id) values (?,?,?,?);";
-
+        audit(insert);
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insert)){
@@ -38,7 +40,7 @@ public class AddressService {
 
     public Address getAddressByUserId(int user_id) {
         String select = "SELECT * FROM address WHERE user_id=?";
-
+        audit(select);
         Connection connection = DatabaseConfiguration.getDatabaseConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(select)) {
@@ -51,6 +53,20 @@ public class AddressService {
         }
 
         return null;
+    }
+
+    public void deleteAddressById(int id) {
+        String delete = "DELETE FROM address WHERE id=?";
+        audit(delete);
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(delete)) {
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private Address map(ResultSet resultSet) throws SQLException {
