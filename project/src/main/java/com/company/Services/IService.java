@@ -1,11 +1,16 @@
 package com.company.Services;
 
 import com.company.Entities.Category;
+import com.company.Entities.Product;
 import com.company.Entities.User;
+
+import java.sql.SQLException;
 
 public interface IService {
 
-    public void mainPanel();
+    public void mainPanel() throws SQLException;
+
+    public void createTables();
 
     public void firstMenu();
     public void register();
@@ -17,11 +22,11 @@ public interface IService {
     void displayOrderHistory();
     void cart();
 
-    void shopMenu();
+    void shopMenu(User user);
     void displayCategories();
-    void displayProducts(Category category);
+    void displayProducts(User user, Category category);
     void sortProducts(Category category);
-    void addProductToCart();
+    void addProductToCart(User user, Product product);
 
     void adminMenu();
     public void displayAllUsers();

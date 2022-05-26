@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Repository <T extends Tracker> implements IRepository<T>{
-    private Set<T> context = new HashSet<>();
+    private final Set<T> context = new HashSet<>();
 
     @Override
     public void create(T obj) {
-        obj.setId(Tracker.nextId());
+        obj.setId(T.nextId());
+        System.out.println(obj.getClass().getSimpleName() + ": " + obj.getId());
         context.add(obj);
     }
 
